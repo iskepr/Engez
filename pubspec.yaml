@@ -16,6 +16,7 @@ dependencies:
   external_app_launcher: ^4.0.1
   adhan: ^2.0.0+1
   flutter_local_notifications: ^18.0.1
+  shared_preferences: ^2.4.0
   timezone: ^0.10.0
 
 dev_dependencies:

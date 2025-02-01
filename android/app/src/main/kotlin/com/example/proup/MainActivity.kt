@@ -1,6 +1,5 @@
 package com.example.proup
 
-import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import io.flutter.embedding.android.FlutterActivity
@@ -20,10 +19,6 @@ class MainActivity : FlutterActivity() {
                         val apps = getInstalledUserApps()
                         result.success(apps)
                     }
-                    "openDefaultAppsSettings" -> {
-                        openDefaultAppsSettings()
-                        result.success(null)
-                    }
                     else -> {
                         result.notImplemented()
                     }
@@ -31,22 +26,19 @@ class MainActivity : FlutterActivity() {
             }
     }
 
-    private fun getInstalledUserApps(): List<String> {
-        val apps = mutableListOf<String>()
+    private fun getInstalledUserApps(): List<Map<String, String>> {
+        val apps = mutableListOf<Map<String, String>>()
         val packageManager: PackageManager = packageManager
-        val packages: List<ApplicationInfo> = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+        val packages: List<ApplicationInfo> =
+            packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
 
         for (appInfo in packages) {
-            // تحقق إذا كان التطبيق ليس نظاميًا
-            if (appInfo.flags and ApplicationInfo.FLAG_SYSTEM == 0) {
-                apps.add(packageManager.getApplicationLabel(appInfo).toString())
+            if (appInfo.flags and ApplicationInfo.FLAG_SYSTEM == 0) { // فقط التطبيقات غير النظامية
+                val appName = packageManager.getApplicationLabel(appInfo).toString()
+                val packageName = appInfo.packageName
+                apps.add(mapOf("name" to appName, "package" to packageName))
             }
         }
         return apps
-    }
-
-    private fun openDefaultAppsSettings() {
-        val intent = Intent("android.settings.MANAGE_DEFAULT_APPS_SETTINGS")
-        startActivity(intent)
     }
 }

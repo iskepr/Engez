@@ -1,18 +1,18 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:adhan/adhan.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'package:intl/intl.dart'; // استيراد مكتبة intl
 
-class Adhan extends StatefulWidget {
-  const Adhan({super.key});
+class AdhanScreen extends StatefulWidget {
+  const AdhanScreen({super.key});
 
   @override
-  State<Adhan> createState() => _AdhanState();
+  State<AdhanScreen> createState() => _AdhanScreenState();
 }
 
-class _AdhanState extends State<Adhan> {
+class _AdhanScreenState extends State<AdhanScreen> {
   late final Coordinates coordinates =
       Coordinates(30.043489, 31.235291); // خط العرض والطول
   late final params = CalculationMethod.egyptian.getParameters();
@@ -49,7 +49,6 @@ class _AdhanState extends State<Adhan> {
 
     // معرفة الصلاة القادمة
     Prayer? nextPrayer;
-
     if (now.isBefore(prayerTimes.fajr)) {
       nextPrayer = Prayer.fajr;
       nextPrayerTime = prayerTimes.fajr;
@@ -77,15 +76,12 @@ class _AdhanState extends State<Adhan> {
     });
   }
 
-// دالة لتحديث العد التنازلي
   void _startCountdown() {
     const oneSecond = Duration(seconds: 1);
-
     Timer.periodic(oneSecond, (timer) {
       if (nextPrayerTime != null) {
         var now = DateTime.now();
         var difference = nextPrayerTime!.difference(now);
-
         if (difference.isNegative) {
           setState(() {
             countdown = 'حان وقت الصلاة';
@@ -95,8 +91,9 @@ class _AdhanState extends State<Adhan> {
           setState(() {
             if (difference.inHours > 0) {
               // إذا كانت الفترة أكبر من ساعة
-              countdown = '${difference.inMinutes.remainder(60)}'':'' ${difference.inHours}'
-                  ;
+              countdown = '${difference.inMinutes.remainder(60)}'
+                  ':'
+                  ' ${difference.inHours}';
             } else {
               // إذا كانت الفترة أقل من ساعة
               countdown = '${difference.inMinutes}'
@@ -109,7 +106,6 @@ class _AdhanState extends State<Adhan> {
     });
   }
 
-
   void _scheduleNotification(DateTime prayerTime) async {
     var androidDetails = AndroidNotificationDetails(
       'prayer_channel_id',
@@ -120,20 +116,18 @@ class _AdhanState extends State<Adhan> {
     );
     var generalNotificationDetails =
         NotificationDetails(android: androidDetails);
-
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0,
       'وقت الصلاة',
       'حان وقت ${nextPrayerName ?? 'الصلاة'}',
       tz.TZDateTime.from(prayerTime, tz.local),
       generalNotificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exact, // إضافة المعامل
+      androidScheduleMode: AndroidScheduleMode.exact,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 
-  // دالة ترجمة أسماء الصلوات
   String getPrayerName(Prayer prayer) {
     switch (prayer) {
       case Prayer.fajr:
@@ -153,13 +147,77 @@ class _AdhanState extends State<Adhan> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: nextPrayerTime != null && nextPrayerName != null
-          ? Text(
-              '$nextPrayerName خلال $countdown',
-              style: const TextStyle(fontSize: 20),
-            )
-          : const CircularProgressIndicator(), // مؤشر تحميل
+    return Scaffold(
+      appBar: AppBar(title: Text('مواقيت الصلاة')),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.only(right: 20, bottom: 50),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                '$nextPrayerName : $countdown',
+                style: TextStyle(
+                  fontSize: 40,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.right,
+              ),
+              SizedBox(
+                height: 100,
+              ),
+              Text(
+                'الفجر ${nextPrayerName != "الفجر" ? _formatTime(prayerTimes.fajr) : countdown}',
+                style: TextStyle(
+                  fontSize: 30,
+                  color: nextPrayerName != "الفجر" ? Colors.black : Colors.grey,
+                ),
+                textAlign: TextAlign.right,
+              ),
+              Text(
+                'الظهر ${nextPrayerName != "الظهر" ? _formatTime(prayerTimes.dhuhr) : countdown}',
+                style: TextStyle(
+                  fontSize: 30,
+                  color: nextPrayerName != "الظهر" ? Colors.black : Colors.grey,
+                ),
+                textAlign: TextAlign.right,
+              ),
+              Text(
+                'العصر ${nextPrayerName != "العصر" ? _formatTime(prayerTimes.asr) : countdown}',
+                style: TextStyle(
+                  fontSize: 30,
+                  color: nextPrayerName != "العصر" ? Colors.black : Colors.grey,
+                ),
+                textAlign: TextAlign.right,
+              ),
+              Text(
+                'المغرب ${nextPrayerName != "المغرب" ? _formatTime(prayerTimes.maghrib) : countdown}',
+                style: TextStyle(
+                  fontSize: 30,
+                  color:
+                      nextPrayerName != "المغرب" ? Colors.black : Colors.grey,
+                ),
+                textAlign: TextAlign.right,
+              ),
+              Text(
+                'العشاء ${nextPrayerName != "العشاء" ? _formatTime(prayerTimes.isha) : countdown}',
+                style: TextStyle(
+                  fontSize: 30,
+                  color:
+                      nextPrayerName != "العشاء" ? Colors.black : Colors.grey,
+                ),
+                textAlign: TextAlign.right,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
+  }
+
+  String _formatTime(DateTime time) {
+    final formatter = DateFormat('hh:mm'); // تنسيق الوقت 12 ساعة مع AM/PM
+    return formatter.format(time);
   }
 }

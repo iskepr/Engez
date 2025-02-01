@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:proup/models/adhan.dart';
+import 'package:proup/widgets/adhan.dart';
 import 'package:proup/widgets/apps.dart';
 import 'package:proup/widgets/battry.dart';
 import 'package:proup/widgets/footer.dart';
 import 'package:proup/widgets/prograss.dart';
 import 'package:proup/widgets/time.dart';
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -38,7 +40,17 @@ class _HomeState extends State<Home> {
                             Time(),
                           ],
                         ),
-                        Adhan(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AdhanScreen(),
+                              ),
+                            );
+                          },
+                          child: Adhan(),
+                        ),
                       ],
                     ),
                   ),
