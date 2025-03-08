@@ -1,8 +1,8 @@
-import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert'; // لتحويل القوائم إلى نصوص والعكس
+import 'package:external_app_launcher/external_app_launcher.dart';
+import 'dart:convert';
 
 class Apps extends StatefulWidget {
   const Apps({super.key});
@@ -12,26 +12,14 @@ class Apps extends StatefulWidget {
 }
 
 class _AppsState extends State<Apps> {
-  static const platform = MethodChannel('com.example.proup/installed_apps');
+  static const platform = MethodChannel('com.skepr.engez/installed_apps');
 
   // القائمة الأساسية للتطبيقات
   List<Map<String, String>> apps = [
-    {
-      "name": "ترتيل",
-      "path": "com.mmmoussa.iqra",
-    },
-    {
-      "name": "يوتيوب",
-      "path": "com.google.android.youtube",
-    },
-    {
-      "name": "واتساب",
-      "path": "com.whatsapp",
-    },
-    {
-      "name": "TickTick",
-      "path": "com.ticktick.task",
-    },
+    {"name": "ترتيل", "path": "com.mmmoussa.iqra"},
+    {"name": "يوتيوب", "path": "com.google.android.youtube"},
+    {"name": "واتساب", "path": "com.whatsapp"},
+    {"name": "TickTick", "path": "com.ticktick.task"},
   ];
 
   // قائمة التطبيقات المثبتة
@@ -40,16 +28,19 @@ class _AppsState extends State<Apps> {
   // جلب التطبيقات المثبتة
   Future<void> fetchInstalledApps() async {
     try {
-      final List<dynamic> result =
-          await platform.invokeMethod('getInstalledApps');
+      final List<dynamic> result = await platform.invokeMethod(
+        'getInstalledApps',
+      );
       print("Fetched apps: $result"); // التحقق من النتيجة
 
       setState(() {
         installedApps = result
-            .map((app) => {
-                  "name": app["name"].toString(),
-                  "path": app["package"].toString()
-                })
+            .map(
+              (app) => {
+                "name": app["name"].toString(),
+                "path": app["package"].toString(),
+              },
+            )
             .cast<Map<String, String>>()
             .toList();
       });
@@ -70,12 +61,19 @@ class _AppsState extends State<Apps> {
     final String? encodedApps = prefs.getString('savedApps');
     if (encodedApps != null) {
       setState(() {
-        apps = List<Map<String, String>>.from(
-          jsonDecode(encodedApps), // تحويل JSON إلى قائمة
-        );
+        // أولاً نقوم بتحويل JSON إلى List<dynamic> ثم نقوم بتحويل كل عنصر إلى Map<String, String>
+        List<dynamic> jsonData = jsonDecode(encodedApps);
+        apps = jsonData.map((item) => Map<String, String>.from(item)).toList();
       });
       print("Apps loaded from storage: $apps");
     }
+  }
+
+  Future<void> openApp(String packageName) async {
+    await LaunchApp.openApp(
+      androidPackageName: packageName,
+      openStore: false,
+    );
   }
 
   @override
@@ -94,11 +92,8 @@ class _AppsState extends State<Apps> {
             (app) => Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: GestureDetector(
-                onTap: () async {
-                  await LaunchApp.openApp(
-                    androidPackageName: app['path'],
-                    openStore: false,
-                  );
+                onTap: () {
+                  openApp(app['path']!);
                 },
                 onLongPress: () {
                   // فتح قائمة التطبيقات المثبتة

@@ -1,16 +1,25 @@
-# proup
+<right style="direction: rtl">
 
-A new Flutter project.
+# شغل تطبيقات إنجز
+---
+مشغل تطبيقات متخصص في زيادة الانتاجية
+المميزات
+1. تنظيم اليوم بوقت محدد
+    - تحديد تطبيق واحد في وفترة زمنية محددة للحد من التشتت
+    - تحديد وقت محدد لاغلاق الهاتف ولا يمكن فتحة حتي ينتهي الوقت
+2. منبه الفجر
+    - منبه محدد علي صلاة الفجر
+3. مواعيد الصلوات
+    - جميع مواعيد الصلوات مع مع الاذان
+4. التاريخ الهجري
+    - التطبيق كامل مبني علي التاريخ الهجري
+5. الاذكار
+    - 20 ذكر للصباح و20 ذكر لمساء
+6. تحديد مدة استخدام التطبيقات
+    - بدلا من تضيع اوقت في استخدام التطبيق من دون قصد حدد فترة لاستخدام التطبيق
+7. متصفح اللإنترنت
+    - متصفح بسيط مع تحديد مدة لفتح موقع محدد
 
-## Getting Started
+#### يمكنك المساهمة في المشروع ⚠️
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+</right>

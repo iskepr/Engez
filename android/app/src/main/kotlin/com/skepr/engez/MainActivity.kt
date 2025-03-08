@@ -1,4 +1,4 @@
-package com.example.proup
+package com.skepr.engez
 
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
@@ -7,7 +7,7 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "com.example.proup/installed_apps"
+    private val CHANNEL = "com.skepr.engez/installed_apps"
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)

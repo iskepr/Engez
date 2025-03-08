@@ -1,18 +1,18 @@
+import 'package:engez/home.dart';
 import 'package:flutter/material.dart';
-import 'package:proup/home.dart';
 
 void main() {
-  runApp(const ProUp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(Engez());
 }
 
-class ProUp extends StatelessWidget {
-  const ProUp({super.key});
-
+class Engez extends StatelessWidget {
+  Engez({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'proup',
+      title: 'Engez',
       theme: ThemeData(
         fontFamily: 'Misans',
       ),

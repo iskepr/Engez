@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:proup/models/adhan.dart';
-import 'package:proup/widgets/adhan.dart';
-import 'package:proup/widgets/apps.dart';
-import 'package:proup/widgets/battry.dart';
-import 'package:proup/widgets/footer.dart';
-import 'package:proup/widgets/prograss.dart';
-import 'package:proup/widgets/time.dart';
+import 'package:engez/models/adhan.dart';
+import 'package:engez/widgets/adhan.dart';
+import 'package:engez/widgets/apps.dart';
+import 'package:engez/widgets/battry.dart';
+import 'package:engez/widgets/footer.dart';
+import 'package:engez/widgets/prograss.dart';
+import 'package:engez/widgets/time.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});

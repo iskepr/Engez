@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:adhan/adhan.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:intl/intl.dart'; // استيراد مكتبة intl
 
 class AdhanScreen extends StatefulWidget {
@@ -20,24 +18,14 @@ class _AdhanScreenState extends State<AdhanScreen> {
   DateTime? nextPrayerTime;
   String? nextPrayerName;
   String countdown = '';
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+
 
   @override
   void initState() {
     super.initState();
     params.madhab = Madhab.shafi;
     _calculatePrayerTimes();
-    _initializeNotifications(); // إعداد الإشعارات
     _startCountdown(); // بدء العد التنازلي
-  }
-
-  void _initializeNotifications() async {
-    var androidInitialize = AndroidInitializationSettings(
-        'app_icon'); // تأكد من أنك وضعت أيقونة في مجلد `res/drawable/`
-    var initializationSettings =
-        InitializationSettings(android: androidInitialize);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
   void _calculatePrayerTimes() {
@@ -72,7 +60,6 @@ class _AdhanScreenState extends State<AdhanScreen> {
     // تحديث حالة التطبيق
     setState(() {
       nextPrayerName = nextPrayer != null ? getPrayerName(nextPrayer) : null;
-      _scheduleNotification(nextPrayerTime!);
     });
   }
 
@@ -104,28 +91,6 @@ class _AdhanScreenState extends State<AdhanScreen> {
         }
       }
     });
-  }
-
-  void _scheduleNotification(DateTime prayerTime) async {
-    var androidDetails = AndroidNotificationDetails(
-      'prayer_channel_id',
-      'Prayer Notifications',
-      channelDescription: 'Channel for prayer times',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-    var generalNotificationDetails =
-        NotificationDetails(android: androidDetails);
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      0,
-      'وقت الصلاة',
-      'حان وقت ${nextPrayerName ?? 'الصلاة'}',
-      tz.TZDateTime.from(prayerTime, tz.local),
-      generalNotificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exact,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
   }
 
   String getPrayerName(Prayer prayer) {

@@ -61,9 +61,9 @@ class _TimeState extends State<Time> {
 
   @override
   Widget build(BuildContext context) {
-    HijriCalendar _today = new HijriCalendar.now();
+    HijriCalendar today = HijriCalendar.now();
     HijriCalendar.setLocal('ar');
-    final date = _today.toFormat("MMMM dd");
+    final date = today.toFormat("MMMM dd");
     return Column(
       children: [
         Text(
@@ -75,7 +75,7 @@ class _TimeState extends State<Time> {
         ),
         const SizedBox(height: 8),
         Text(
-          '${date}, ${_today.getDayName()}',
+          '$date, ${today.getDayName()}',
           style: const TextStyle(fontSize: 20, color: Colors.grey),
         ),
       ],
